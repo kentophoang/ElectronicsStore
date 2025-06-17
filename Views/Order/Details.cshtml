@@ -1,0 +1,84 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = $"Chi tiết đơn hàng #{Model.Id}";
+}
+
+<h1>Chi tiết đơn hàng #@Model.Id</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                Thông tin đơn hàng
+            </div>
+            <div class="card-body">
+                <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Tổng tiền:</strong> <span class="text-danger fw-bold">@Model.TotalAmount.ToString("N0") VNĐ</span></p>
+                <p>
+                    <strong>Trạng thái:</strong> <span class="badge @(Model.Status == OrderStatus.Delivered ? "bg-success" :
+                                                                                                      Model.Status == OrderStatus.Cancelled ? "bg-danger" :
+                                                                                                      Model.Status == OrderStatus.Pending ? "bg-warning text-dark" :
+                                                                                                      "bg-info text-dark")">
+                        @Model.Status
+                    </span>
+                </p>
+                <p><strong>Phương thức thanh toán:</strong> @Model.PaymentMethod</p>
+                <p><strong>Đã thanh toán:</strong> @(Model.IsPaid ? "Có" : "Không")</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-3">
+            <div class="card-header bg-primary text-white">
+                Thông tin người nhận
+            </div>
+            <div class="card-body">
+                <p><strong>Người nhận:</strong> @Model.CustomerName</p>
+                <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
+                <p><strong>Email:</strong> @Model.Email</p>
+                <p><strong>Địa chỉ:</strong> @Model.ShippingAddress</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-header bg-primary text-white">
+        Sản phẩm trong đơn hàng
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Sản phẩm</th>
+                    <th>Số lượng</th>
+                    <th>Giá đơn vị</th>
+                    <th>Tổng cộng</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderItems)
+                {
+                    <tr>
+                        <td><a asp-controller="Product" asp-action="Details" asp-route-id="@item.ProductId">@item.Product.Name</a></td>
+                        <td>@item.Quantity</td>
+                        <td>@item.Price.ToString("N0") VNĐ</td>
+                        <td>@item.Total.ToString("N0") VNĐ</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-end fw-bold">Tổng cộng đơn hàng:</td>
+                    <td class="fw-bold text-danger">@Model.TotalAmount.ToString("N0") VNĐ</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a asp-action="History" class="btn btn-secondary">Quay lại lịch sử đơn hàng</a>
+</div>
+

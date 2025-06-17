@@ -1,0 +1,47 @@
+﻿@model ElectronicsStore.ViewModels.HomeViewModel
+
+@{
+    ViewData["Title"] = "Trang chủ";
+}
+
+@* === CAROUSEL/BANNER === *@
+<div id="carouselExampleIndicators" class="carousel slide mb-4" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+    <div class="carousel-inner rounded-3">
+        <div class="carousel-item active">
+            <img src="/images/banners/banner.png" class="d-block w-100" alt="Banner quảng cáo 1">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banners/nah.png" class="d-block w-100" alt="Banner quảng cáo 2">
+        </div>
+        <div class="carousel-item">
+            <img src="/images/banners/banner3.png" class="d-block w-100" alt="Banner quảng cáo 3">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>
+
+@* === CÁC KHU VỰC SẢN PHẨM (ĐÃ SỬA LỖI) === *@
+
+@if (Model.FeaturedProducts != null)
+{
+    @* Ép kiểu danh sách sản phẩm thành IEnumerable<Product> để khớp với model của partial view *@
+    <partial name="_ProductSection" model="@(Tuple.Create("Sản phẩm nổi bật", (IEnumerable<Product>)Model.FeaturedProducts))" />
+}
+
+@if (Model.NewArrivals != null)
+{
+    @* Làm tương tự cho danh sách hàng mới về *@
+    <partial name="_ProductSection" model="@(Tuple.Create("Hàng mới về", (IEnumerable<Product>)Model.NewArrivals))" />
+}

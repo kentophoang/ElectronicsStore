@@ -1,0 +1,37 @@
+﻿@model ElectronicsStore.Models.EditRolesViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa vai trò";
+}
+
+<h1 class="mb-4">@ViewData["Title"] cho người dùng: <strong>@Model.UserName</strong></h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form asp-action="EditRoles">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="form-group">
+                        <h5>Chọn các vai trò:</h5>
+                        @foreach (var role in Model.AllRoles)
+                        {
+                            <div class="form-check m-2">
+                                <input type="checkbox" name="UserRoles" value="@role" class="form-check-input"
+                                       @(Model.UserRoles.Contains(role) ? "checked" : "") />
+                                <label class="form-check-label">@role</label>
+                            </div>
+                        }
+                    </div>
+                    <hr />
+                    <div class="form-group mt-3">
+                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

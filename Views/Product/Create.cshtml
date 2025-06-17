@@ -1,0 +1,84 @@
+﻿@model ElectronicsStore.Models.Product
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<h1>Thêm sản phẩm mới</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" method="post">
+            @* Thêm method="post" để form gửi dữ liệu đúng cách *@
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Tên sản phẩm</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="control-label">Mô tả ngắn gọn</label> @* Sửa từ Description *@
+                <textarea asp-for="ShortDescription" class="form-control"></textarea> @* Sửa từ Description *@
+                <span asp-validation-for="ShortDescription" class="text-danger"></span> @* Sửa từ Description *@
+            </div>
+            <div class="form-group">
+                <label asp-for="FullDescription" class="control-label">Mô tả chi tiết</label> @* Thêm trường FullDescription *@
+                <textarea asp-for="FullDescription" class="form-control" rows="5"></textarea> @* Thêm trường FullDescription *@
+                <span asp-validation-for="FullDescription" class="text-danger"></span> @* Thêm trường FullDescription *@
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label">Giá bán</label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="OriginalPrice" class="control-label">Giá gốc</label> @* Thêm trường OriginalPrice *@
+                <input asp-for="OriginalPrice" class="form-control" />
+                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="StockQuantity" class="control-label">Số lượng tồn kho</label> @* Thêm trường StockQuantity *@
+                <input asp-for="StockQuantity" class="form-control" />
+                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label">Danh mục</label>
+                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories, "Id", "Name"))">
+                    <option value="">-- Chọn danh mục --</option> @* Thêm option mặc định *@
+                </select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="MainImageUrl" class="control-label">URL ảnh chính</label> @* Sửa từ ImageUrl *@
+                <input asp-for="MainImageUrl" class="form-control" />
+                <span asp-validation-for="MainImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label">Slug</label> @* Thêm trường Slug *@
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="IsActive" />
+                <label class="form-check-label" asp-for="IsActive">Kích hoạt</label>
+            </div>
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="IsFeatured" />
+                <label class="form-check-label" asp-for="IsFeatured">Nổi bật</label>
+            </div>
+            <div class="form-group mt-3">
+                <input type="submit" value="Tạo mới" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="ProductManagement" asp-controller="Admin" asp-area="Admin">Quay lại danh sách sản phẩm</a> @* Chỉnh sửa link để quay lại trang quản lý sản phẩm trong Admin Area *@
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

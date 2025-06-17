@@ -1,0 +1,189 @@
+﻿@model List<CartItem>
+
+@{
+    ViewData["Title"] = "Giỏ hàng của bạn";
+    decimal subtotal = Model.Sum(item => item.Total);
+}
+
+<h2>Giỏ hàng của bạn</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info" role="alert">
+        Giỏ hàng của bạn hiện đang trống.
+        <a asp-controller="Product" asp-action="Index">Tiếp tục mua sắm</a>
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5>Sản phẩm trong giỏ hàng</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in Model)
+                    {
+                        <li class="list-group-item d-flex align-items-center">
+                            <img src="@item.ProductImageUrl" alt="@item.ProductName" style="width: 80px; height: 80px; object-fit: contain; margin-right: 15px;">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">@item.ProductName</h6>
+                                <p class="mb-1 text-danger fw-bold">@item.Price.ToString("N0") VNĐ</p>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-outline-secondary btn-sm quantity-btn" data-product-id="@item.ProductId" data-change="-1">-</button>
+                                    <input type="number" class="form-control form-control-sm text-center mx-1 quantity-input" value="@item.Quantity" min="1" style="width: 60px;" data-product-id="@item.ProductId">
+                                    <button class="btn btn-outline-secondary btn-sm quantity-btn" data-product-id="@item.ProductId" data-change="1">+</button>
+                                </div>
+                            </div>
+                            <span class="fw-bold me-3 total-item-price" id="total-price-@item.ProductId">@item.Total.ToString("N0") VNĐ</span>
+                            <button class="btn btn-danger btn-sm remove-item-btn" data-product-id="@item.ProductId"><i class="fas fa-trash-alt"></i></button>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5>Tóm tắt đơn hàng</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tạm tính:</span>
+                        <span class="fw-bold" id="cartSubtotal">@subtotal.ToString("N0") VNĐ</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Phí vận chuyển:</span>
+                        <span class="fw-bold">Tính sau</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between">
+                        <h5>Tổng cộng:</h5>
+                        <h5 class="text-danger" id="cartGrandTotal">@subtotal.ToString("N0") VNĐ</h5>
+                    </div>
+                    <div class="d-grid mt-3">
+                        <a asp-action="Checkout" class="btn btn-primary btn-lg">Tiến hành đặt hàng</a>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a asp-controller="Product" asp-action="Index">Tiếp tục mua sắm</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Function to update item total and overall cart total
+            function updateCartTotals() {
+                var newSubtotal = 0;
+                $('.list-group-item').each(function() {
+                    var productId = $(this).find('.quantity-input').data('product-id');
+                    var quantity = parseInt($(this).find('.quantity-input').val());
+                    var priceText = $(this).find('.text-danger.fw-bold').first().text();
+                    var price = parseFloat(priceText.replace(/[^0-9,-]+/g,"").replace(",", ".")); // Parse price
+
+                    var itemTotal = price * quantity;
+                    $('#total-price-' + productId).text(itemTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                    newSubtotal += itemTotal;
+                });
+
+                $('#cartSubtotal').text(newSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                $('#cartGrandTotal').text(newSubtotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }));
+                 // Update cart count in header
+                 $.get('/CartSummary', function(data) { // Assuming CartSummary ViewComponent is at this URL
+                    $('.fa-shopping-cart').next('span').text(data);
+                 });
+            }
+
+            // Quantity buttons
+            $('.quantity-btn').on('click', function() {
+                var button = $(this);
+                var productId = button.data('product-id');
+                var input = $('input.quantity-input[data-product-id="' + productId + '"]');
+                var currentVal = parseInt(input.val());
+                var change = button.data('change');
+
+                var newVal = currentVal + change;
+                if (newVal >= 1) {
+                    input.val(newVal);
+                    // Call server to update cart
+                    $.ajax({
+                        url: '/Cart/UpdateCart',
+                        type: 'POST',
+                        data: { productId: productId, quantity: newVal },
+                        success: function(response) {
+                            if (response.success) {
+                                updateCartTotals(); // Update UI totals
+                            } else {
+                                alert('Không thể cập nhật số lượng: ' + response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Lỗi khi cập nhật giỏ hàng.');
+                        }
+                    });
+                }
+            });
+
+            // Quantity input direct change
+            $('.quantity-input').on('change', function() {
+                var input = $(this);
+                var productId = input.data('product-id');
+                var quantity = parseInt(input.val());
+
+                if (isNaN(quantity) || quantity < 1) {
+                    quantity = 1;
+                    input.val(1);
+                }
+
+                $.ajax({
+                    url: '/Cart/UpdateCart',
+                    type: 'POST',
+                    data: { productId: productId, quantity: quantity },
+                    success: function(response) {
+                        if (response.success) {
+                            updateCartTotals(); // Update UI totals
+                        } else {
+                            alert('Không thể cập nhật số lượng: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Lỗi khi cập nhật giỏ hàng.');
+                    }
+                });
+            });
+
+            // Remove item from cart
+            $('.remove-item-btn').on('click', function() {
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                    var button = $(this);
+                    var productId = button.data('product-id');
+                    $.ajax({
+                        url: '/Cart/RemoveFromCart',
+                        type: 'POST',
+                        data: { productId: productId },
+                        success: function(response) {
+                            if (response.success) {
+                                button.closest('li').remove(); // Remove item from UI
+                                updateCartTotals(); // Update UI totals
+                                if ($('.list-group-item').length === 0) {
+                                    // If cart is empty, redirect or show empty message
+                                    location.reload(); // Simple reload to show empty cart message
+                                }
+                            } else {
+                                alert('Không thể xóa sản phẩm: ' + response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Lỗi khi xóa sản phẩm khỏi giỏ hàng.');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

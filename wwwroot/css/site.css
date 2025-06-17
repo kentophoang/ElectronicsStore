@@ -1,0 +1,52 @@
+﻿/* Reset và thiết lập mặc định */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Body sẽ chiếm toàn bộ chiều cao còn lại sau header và footer */
+body {
+    flex: 1;
+}
+
+/* Nội dung chính sẽ mở rộng khi có thể */
+#page-content {
+    flex: 1 0 auto;
+}
+
+/* Footer luôn nằm cuối và không bị co lại */
+.footer {
+    flex-shrink: 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    padding: 20px 0;
+    color: #6c757d;
+}
+
+    /* Liên kết trong footer */
+    .footer a {
+        color: #6c757d;
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+/* Các phần khác (tuỳ chọn) */
+.card {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: none;
+}
+
+.btn-outline-primary {
+    border-radius: 8px;
+}
+
+.navbar-nav .nav-link.active {
+    font-weight: bold;
+}

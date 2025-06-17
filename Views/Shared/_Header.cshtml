@@ -1,0 +1,51 @@
+﻿<header class="bg-primary text-white py-2">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center">
+
+            @* 1. Logo *@
+            <a class="navbar-brand text-white fs-4 fw-bold" asp-area="" asp-controller="Home" asp-action="Index">
+                <i class="fas fa-bolt"></i> Cửa hàng Điện tử
+            </a>
+
+            @* 2. Thanh tìm kiếm *@
+            <form class="d-flex w-50" role="search" asp-controller="Product" asp-action="Index" method="GET">
+                <input class="form-control me-2" type="search" placeholder="Tìm kiếm sản phẩm..." aria-label="Search" name="searchString" value="@Context.Request.Query["searchString"]">
+                <button class="btn btn-warning" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+
+            @* 3. Giỏ hàng và Đăng nhập/Đăng ký *@
+            <div class="d-flex align-items-center">
+                <a class="nav-link text-white me-3" asp-controller="Cart" asp-action="Index">
+                    <i class="fas fa-shopping-cart"></i> Giỏ hàng (@await Component.InvokeAsync("CartSummary"))
+                </a>
+                <partial name="_LoginPartial" />
+            </div>
+
+        </div>
+    </div>
+</header>
+<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" asp-area="" asp-controller="Home" asp-action="Index"><i class="fas fa-home"></i> Trang chủ</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategories" role="button" data-bs-toggle="dropdown">
+                        <i class="fas fa-list"></i> Danh mục sản phẩm
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCategories">
+                        @await Component.InvokeAsync("CategoryMenu")
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link" href="#">Khuyến mãi</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Tin công nghệ</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">Liên hệ</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,104 @@
+﻿@model IEnumerable<ElectronicsStore.Models.ApplicationUser>
+
+@{
+    ViewData["Title"] = "Quản lý Khách hàng";
+}
+
+<div class="card shadow-sm mt-4">
+    <div class="card-header bg-light">
+        <div class="d-flex justify-content-between align-items-center">
+            <h4 class="mb-0 text-dark">
+                <i class="fas fa-users me-2"></i>@ViewData["Title"]
+            </h4>
+            @* User thường được tạo qua trang Đăng ký công khai, nên nút này có thể vô hiệu hóa *@
+            <a class="btn btn-primary disabled" asp-action="Create" title="Chức năng đang phát triển">
+                <i class="fas fa-user-plus"></i> Thêm người dùng
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body">
+        @* THÊM FORM TÌM KIẾM *@
+        <form asp-action="Index" method="get" class="mb-4">
+            <div class="input-group">
+                <input type="text" name="searchString" class="form-control" placeholder="Tìm theo tên, email..." value="@ViewData["CurrentFilter"]">
+                <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+                <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-sync-alt"></i> Tải lại</a>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Họ và tên</th>
+                        <th>Email / Tên đăng nhập</th>
+                        <th>Số điện thoại</th>
+                        <th class="text-center" style="width: 120px;">Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">
+                                Không tìm thấy người dùng nào.
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var user in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@user.FullName</strong>
+                                </td>
+                                <td>
+                                    @user.Email
+                                </td>
+                                <td>
+                                    @(user.PhoneNumber ?? "Chưa có")
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        @* Sửa lại asp-action thành "EditRoles" để khớp với Controller *@
+                                        <a asp-action="EditRoles" asp-route-id="@user.Id" class="btn btn-outline-primary btn-sm" title="Sửa vai trò">
+                                            <i class="fas fa-user-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-outline-danger btn-sm" title="Xóa người dùng">
+                                            <i class="fas fa-user-times"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    @* THÊM LẠI PHẦN PHÂN TRANG *@
+    @if (ViewBag.TotalPages > 1)
+    {
+        <div class="card-footer">
+            <nav aria-label="User navigation">
+                <ul class="pagination justify-content-center mb-0">
+                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Trước</a>
+                    </li>
+                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewData["CurrentFilter"]">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Sau</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
+</div>

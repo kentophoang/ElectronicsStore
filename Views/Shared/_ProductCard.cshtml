@@ -1,0 +1,36 @@
+﻿@model ElectronicsStore.Models.Product
+
+<div class="card product-card h-100 shadow-sm border-light">
+    <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none">
+        <img src="@Model.MainImageUrl" class="card-img-top" alt="@Model.Name" style="height: 200px; object-fit: cover;">
+    </a>
+    <div class="card-body d-flex flex-column">
+        <h5 class="card-title" style="min-height: 48px;">
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@Model.Id" class="text-decoration-none text-dark stretched-link">
+                @Model.Name
+            </a>
+        </h5>
+        <p class="card-text text-muted small flex-grow-1">@Model.ShortDescription</p>
+
+        <div class="mt-auto pt-2">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="price fw-bold fs-5 text-danger">@Model.Price.ToString("N0") VNĐ</span>
+
+                @* KHU VỰC ĐÃ ĐƯỢC SỬA LỖI *@
+                @* Vì OriginalPrice là `decimal` (không thể null), chúng ta chỉ cần so sánh giá trị của nó. *@
+                @if (Model.OriginalPrice > Model.Price)
+                {
+                    <span class="original-price text-muted text-decoration-line-through small">
+                        @* Đã bỏ dấu ?.ToString() *@
+                        @Model.OriginalPrice.ToString("N0") VNĐ
+                    </span>
+                }
+            </div>
+            <div class="d-grid">
+                <button type="button" class="btn btn-outline-primary btn-sm btn-add-to-cart" data-product-id="@Model.Id" onclick="event.stopPropagation(); alert('Đã thêm sản phẩm @Model.Id');">
+                    <i class="fa fa-shopping-cart"></i> Thêm vào giỏ
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

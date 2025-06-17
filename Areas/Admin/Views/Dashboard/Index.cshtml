@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Bảng điều khiển";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+        <i class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo
+    </a>
+</div>
+
+@* Hàng chứa các thẻ thống kê *@
+<div class="row">
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Tổng khách hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalUsers</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-users fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-success shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Tổng sản phẩm</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalProducts</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-box fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tổng đơn hàng</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalOrders</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-clipboard-list fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Tổng doanh thu</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">@ViewBag.TotalRevenue.ToString("N0") VNĐ</div>
+                    </div>
+                    <div class="col-auto"><i class="fas fa-dollar-sign fa-2x text-gray-300"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr class="my-4">
+
+@* Hàng chứa các lối vào chức năng quản lý chính *@
+<div class="row">
+    <div class="col-lg-6 mb-4">
+        @* LIÊN KẾT ĐÚNG: Trỏ đến ProductsController *@
+        <a class="card bg-primary text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Products" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-box-open fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Sản phẩm</h4>
+                <div class="text-white-50 small">Thêm, sửa, xóa các sản phẩm</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+        @* LIÊN KẾT ĐÚNG: Trỏ đến UsersController *@
+        <a class="card bg-info text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Users" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-user-friends fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Khách hàng</h4>
+                <div class="text-white-50 small">Xem danh sách và thông tin khách hàng</div>
+            </div>
+        </a>
+    </div>
+</div>

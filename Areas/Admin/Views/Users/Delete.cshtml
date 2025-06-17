@@ -1,0 +1,29 @@
+﻿@model ElectronicsStore.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Xác nhận xóa người dùng";
+}
+
+<h1 class="text-danger">@ViewData["Title"]</h1>
+<h3 class="text-danger">Bạn có chắc chắn muốn xóa người dùng này không?</h3>
+<p class="text-danger">Hành động này không thể được hoàn tác.</p>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h4>Thông tin người dùng</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-3">Họ và tên</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
+            <dt class="col-sm-3">Email</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+        </dl>
+
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <button type="submit" class="btn btn-danger">Xóa vĩnh viễn</button> |
+            <a asp-action="Index">Hủy bỏ</a>
+        </form>
+    </div>
+</div>

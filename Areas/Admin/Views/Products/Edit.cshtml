@@ -1,0 +1,113 @@
+﻿@model ElectronicsStore.Models.Product
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Edit Product</h1>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Id" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ShortDescription" class="control-label"></label>
+                <textarea asp-for="ShortDescription" class="form-control"></textarea>
+                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="FullDescription" class="control-label"></label>
+                <input asp-for="FullDescription" class="form-control" />
+                <span asp-validation-for="FullDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="OriginalPrice" class="control-label"></label>
+                <input asp-for="OriginalPrice" class="form-control" />
+                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="StockQuantity" class="control-label"></label>
+                <input asp-for="StockQuantity" class="form-control" />
+                <span asp-validation-for="StockQuantity" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CategoryId" class="control-label"></label>
+                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Cập nhật ảnh mới</label>
+                <input type="file" name="ImageFile" class="form-control" />
+                @if (!string.IsNullOrEmpty(Model.MainImageUrl))
+                {
+                    <div class="mt-2">
+                        <p>Ảnh hiện tại:</p>
+                        <img src="@Model.MainImageUrl" style="max-width: 200px;" />
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Slug" class="control-label"></label>
+                <input asp-for="Slug" class="form-control" />
+                <span asp-validation-for="Slug" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label"></label>
+                <input asp-for="CreatedDate" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="UpdatedDate" class="control-label"></label>
+                <input asp-for="UpdatedDate" class="form-control" />
+                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="IsActive" />
+                <label class="form-check-label" asp-for="IsActive"></label>
+            </div>
+
+            <div class="form-group form-check">
+                <input class="form-check-input" asp-for="IsFeatured" />
+                <label class="form-check-label" asp-for="IsFeatured"></label>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

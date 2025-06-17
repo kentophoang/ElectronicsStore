@@ -1,0 +1,31 @@
+﻿@* Model của View này là một Tuple:
+    - Item1 (string): Tiêu đề của khu vực (ví dụ: "Sản phẩm nổi bật").
+    - Item2 (IEnumerable<Product>): Danh sách các sản phẩm cần hiển thị.
+*@
+@model Tuple<string, IEnumerable<Product>>
+
+<section class="pt-5">
+    <header class="text-center mb-4">
+        <h3>@Model.Item1</h3>
+    </header>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        @if (Model.Item2 != null && Model.Item2.Any())
+        {
+            @foreach (var product in Model.Item2)
+            {
+                <div class="col">
+                    <partial name="_ProductCard" model="product" />
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    Hiện chưa có sản phẩm nào trong mục này.
+                </div>
+            </div>
+        }
+    </div>
+</section>

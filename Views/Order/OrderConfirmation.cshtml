@@ -1,0 +1,45 @@
+﻿@* SỬA LẠI DÒNG NÀY:
+   Thay vì chỉ nhận một số int, View này sẽ nhận toàn bộ đối tượng Order.
+*@
+@using ElectronicsStore.Models
+@model Order
+
+@{
+    ViewData["Title"] = "Xác nhận đơn hàng";
+}
+
+@* Sử dụng các lớp của Bootstrap để tạo giao diện thông báo *@
+<div class="row justify-content-center">
+    <div class="col-lg-7 col-md-9 col-sm-12">
+
+        <div class="card shadow-lg border-0 rounded-lg mt-5 text-center">
+            <div class="card-body p-5">
+
+                @* Icon và tiêu đề thông báo thành công *@
+                <i class="fas fa-check-circle text-success fa-4x mb-4"></i>
+                <h1 class="h3 mb-3">Đặt hàng thành công!</h1>
+
+                @* Thông điệp xác nhận và mã đơn hàng *@
+                <p class="lead text-muted">Cảm ơn bạn, <strong>@Model.CustomerName</strong>, đã mua sắm tại Cửa hàng Điện tử.</p>
+
+                @* SỬA LẠI ĐÂY: Dùng Model.Id thay vì chỉ Model *@
+                <p>Mã số đơn hàng của bạn là: <strong class="text-primary">#@Model.Id</strong></p>
+                <p>Tổng giá trị đơn hàng: <strong class="text-danger">@Model.TotalAmount.ToString("N0") VNĐ</strong></p>
+                <p>Một email xác nhận chi tiết đơn hàng sẽ được gửi đến hộp thư của bạn.</p>
+
+                <hr class="my-4">
+
+                @* Các nút hành động cho người dùng *@
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a class="btn btn-primary btn-lg px-4 gap-3" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-shopping-bag"></i> Tiếp tục mua sắm
+                    </a>
+                    <a class="btn btn-outline-secondary btn-lg px-4" asp-controller="Order" asp-action="History">
+                        <i class="fas fa-history"></i> Xem lịch sử đơn hàng
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

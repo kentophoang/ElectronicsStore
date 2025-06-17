@@ -1,0 +1,37 @@
+﻿@page
+@model LogoutModel
+@{
+    ViewData["Title"] = "Đăng xuất";
+}
+
+@* Sử dụng các lớp của Bootstrap để căn giữa card thông báo *@
+<div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8 col-sm-10">
+
+        <div class="card shadow-lg border-0 rounded-lg mt-5 text-center">
+            <div class="card-body p-5">
+
+                @* Icon và tiêu đề thông báo thành công *@
+                <i class="fas fa-check-circle text-success fa-4x mb-4"></i>
+                <h1 class="h3 mb-3">@ViewData["Title"] thành công</h1>
+
+                @* Thông điệp xác nhận *@
+                <p class="lead text-muted">Bạn đã đăng xuất khỏi tài khoản của mình.</p>
+                <p>Cảm ơn bạn đã sử dụng dịch vụ của Cửa hàng Điện tử.</p>
+
+                <hr class="my-4">
+
+                @* Các nút hành động cho người dùng *@
+                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
+                    <a class="btn btn-primary btn-lg px-4 gap-3" asp-controller="Home" asp-action="Index">
+                        <i class="fas fa-home"></i> Quay về trang chủ
+                    </a>
+                    <a class="btn btn-outline-secondary btn-lg px-4" asp-page="./Login">
+                        <i class="fas fa-sign-in-alt"></i> Đăng nhập lại
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

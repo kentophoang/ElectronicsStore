@@ -1,0 +1,85 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+@* Sử dụng các lớp của Bootstrap để căn giữa form *@
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-8 col-sm-10">
+
+        @* Bọc toàn bộ form trong một card để có giao diện đẹp hơn *@
+        <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header">
+                <h3 class="text-center font-weight-light my-4">
+                    <i class="fas fa-sign-in-alt"></i> @ViewData["Title"]
+                </h3>
+            </div>
+            <div class="card-body p-4">
+                <section>
+                    <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                            <label asp-for="Input.Email" class="form-label">Email</label>
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
+                            <label asp-for="Input.Password" class="form-label">Mật khẩu</label>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                        </div>
+
+                        @* Cải tiến checkbox và các link phụ *@
+                        <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                            <div class="form-check">
+                                <input class="form-check-input" asp-for="Input.RememberMe" />
+                                <label class="form-check-label" asp-for="Input.RememberMe">
+                                    @Html.DisplayNameFor(m => m.Input.RememberMe)
+                                </label>
+                            </div>
+                            <a id="forgot-password" asp-page="./ForgotPassword">Quên mật khẩu?</a>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button id="login-submit" type="submit" class="w-100 btn btn-lg btn-primary">Đăng nhập</button>
+                        </div>
+                    </form>
+                </section>
+
+                @* Sắp xếp lại khu vực đăng nhập bằng dịch vụ bên ngoài *@
+                @{
+                    if ((Model.ExternalLogins?.Count ?? 0) > 0)
+                    {
+                        <hr class="my-4">
+                        <section>
+                            <h5 class="text-center">Hoặc đăng nhập với</h5>
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="mt-3">
+                                <div class="d-flex flex-wrap justify-content-center">
+                                    @foreach (var provider in Model.ExternalLogins!)
+                                    {
+                                        <button type="submit" class="btn btn-outline-secondary mx-1 mb-2" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                            <i class="fab fa-@provider.Name.ToLower()"></i> @provider.DisplayName
+                                        </button>
+                                    }
+                                </div>
+                            </form>
+                        </section>
+                    }
+                }
+            </div>
+            <div class="card-footer text-center py-3">
+                <div class="small">
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Chưa có tài khoản? Tạo tài khoản mới</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
