@@ -1,100 +1,116 @@
 ﻿@model ElectronicsStore.Models.Product
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm sản phẩm mới";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create Product</h1>
-<hr />
-<div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="container-fluid">
 
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+            <div>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left fa-sm text-white-50"></i> Quay lại danh sách
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save fa-sm text-white-50"></i> Lưu sản phẩm
+                </button>
             </div>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-            <div class="form-group">
-                <label asp-for="ShortDescription" class="control-label"></label>
-                <textarea asp-for="ShortDescription" class="form-control"></textarea>
-                <span asp-validation-for="ShortDescription" class="text-danger"></span>
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Thông tin sản phẩm</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label asp-for="Name" class="control-label fw-bold"></label>
+                            <input asp-for="Name" class="form-control" placeholder="Ví dụ: iPhone 15 Pro Max" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="ShortDescription" class="control-label fw-bold">Mô tả ngắn</label>
+                            <textarea asp-for="ShortDescription" class="form-control" rows="3" placeholder="Mô tả ngắn gọn, hấp dẫn hiển thị ở danh sách sản phẩm"></textarea>
+                            <span asp-validation-for="ShortDescription" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="FullDescription" class="control-label fw-bold">Mô tả đầy đủ</label>
+                            <textarea asp-for="FullDescription" class="form-control" rows="7" placeholder="Mô tả chi tiết, thông số kỹ thuật..."></textarea>
+                            <span asp-validation-for="FullDescription" class="text-danger"></span>
+                            <small class="form-text text-muted">Gợi ý: Bạn có thể tích hợp một trình soạn thảo văn bản như TinyMCE hoặc CKEditor để dễ dàng định dạng nội dung.</small>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="FullDescription" class="control-label"></label>
-                <input asp-for="FullDescription" class="form-control" />
-                <span asp-validation-for="FullDescription" class="text-danger"></span>
+            <div class="col-lg-4">
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Giá & Kho hàng</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label asp-for="Price" class="control-label fw-bold">Giá bán</label>
+                            <div class="input-group">
+                                <input asp-for="Price" type="number" class="form-control" />
+                                <span class="input-group-text">VNĐ</span>
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="OriginalPrice" class="control-label fw-bold">Giá gốc (nếu có)</label>
+                            <div class="input-group">
+                                <input asp-for="OriginalPrice" type="number" class="form-control" />
+                                <span class="input-group-text">VNĐ</span>
+                            </div>
+                            <span asp-validation-for="OriginalPrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="StockQuantity" class="control-label fw-bold">Số lượng tồn kho</label>
+                            <input asp-for="StockQuantity" type="number" class="form-control" />
+                            <span asp-validation-for="StockQuantity" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-primary">Phân loại & Hiển thị</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group mb-3">
+                            <label asp-for="CategoryId" class="control-label fw-bold">Loại sản phẩm</label>
+                            <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label class="control-label fw-bold">Ảnh đại diện</label>
+                            <input type="file" name="ImageFile" class="form-control" />
+                        </div>
+                        <hr />
+                        <div class="form-group form-check form-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="IsActive" checked>
+                            <label class="form-check-label" asp-for="IsActive">Kích hoạt (hiển thị để bán)</label>
+                        </div>
+                        <div class="form-group form-check form-switch">
+                            <input class="form-check-input" type="checkbox" asp-for="IsFeatured">
+                            <label class="form-check-label" asp-for="IsFeatured">Sản phẩm nổi bật</label>
+                        </div>
+                    </div>
+                </div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="OriginalPrice" class="control-label"></label>
-                <input asp-for="OriginalPrice" class="form-control" />
-                <span asp-validation-for="OriginalPrice" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="StockQuantity" class="control-label"></label>
-                <input asp-for="StockQuantity" class="form-control" />
-                <span asp-validation-for="StockQuantity" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId"></select>
-            </div>
-
-            <div class="form-group">
-                <label class="control-label">Chọn ảnh</label>
-                <input type="file" name="ImageFile" class="form-control" />
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Slug" class="control-label"></label>
-                <input asp-for="Slug" class="form-control" />
-                <span asp-validation-for="Slug" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label"></label>
-                <input asp-for="CreatedDate" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="UpdatedDate" class="control-label"></label>
-                <input asp-for="UpdatedDate" class="form-control" />
-                <span asp-validation-for="UpdatedDate" class="text-danger"></span>
-            </div>
-
-            <div class="form-group form-check">
-                <input class="form-check-input" asp-for="IsActive" />
-                <label class="form-check-label" asp-for="IsActive"></label>
-            </div>
-
-            <div class="form-group form-check">
-                <input class="form-check-input" asp-for="IsFeatured" />
-                <label class="form-check-label" asp-for="IsFeatured"></label>
-            </div>
-
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+        @*
+            LƯU Ý QUAN TRỌNG:
+            - Các trường 'Slug', 'CreatedDate', 'UpdatedDate' đã được gỡ khỏi form vì chúng nên được xử lý tự động.
+            - 'Slug' nên được tự động tạo từ 'Name' trong Controller để tối ưu SEO.
+            - 'CreatedDate' và 'UpdatedDate' nên được gán giá trị DateTime.Now ở phía server khi tạo/cập nhật sản phẩm.
+        *@
+    </form>
 </div>
 
 @section Scripts {

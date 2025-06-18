@@ -2,28 +2,43 @@
 
 @{
     ViewData["Title"] = "Xác nhận xóa người dùng";
+    // Sửa 1: Áp dụng Layout chung để có header, footer
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="text-danger">@ViewData["Title"]</h1>
-<h3 class="text-danger">Bạn có chắc chắn muốn xóa người dùng này không?</h3>
-<p class="text-danger">Hành động này không thể được hoàn tác.</p>
+<div class="container-fluid">
 
-<div class="card mt-4">
-    <div class="card-body">
-        <h4>Thông tin người dùng</h4>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-3">Họ và tên</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
-            <dt class="col-sm-3">Email</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
-        </dl>
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Hành động này không thể được hoàn tác. Tất cả dữ liệu liên quan đến người dùng này sẽ bị xóa vĩnh viễn.</p>
 
-        <form asp-action="Delete">
-            <input type="hidden" asp-for="Id" />
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            <button type="submit" class="btn btn-danger">Xóa vĩnh viễn</button> |
-            <a asp-action="Index">Hủy bỏ</a>
-        </form>
+    {{-- Sửa 2: Đưa nội dung vào trong card để giao diện đồng bộ --}}
+    <div class="card border-left-danger shadow py-2">
+        <div class="card-body">
+            <h5 class="card-title text-danger">Bạn có chắc chắn muốn xóa người dùng này không?</h5>
+            <hr>
+            <div>
+                <dl class="row">
+                    <dt class="col-sm-3">Họ và tên:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.FullName)</dd>
+
+                    <dt class="col-sm-3">Email:</dt>
+                    <dd class="col-sm-9">@Html.DisplayFor(model => model.Email)</dd>
+
+                    <dt class="col-sm-3">Số điện thoại:</dt>
+                    <dd class="col-sm-9">@(Model.PhoneNumber ?? "Chưa có")</dd>
+                </dl>
+            </div>
+            <hr>
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash-alt"></i> Xóa vĩnh viễn
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fas fa-times"></i> Hủy
+                </a>
+            </form>
+        </div>
     </div>
+
 </div>

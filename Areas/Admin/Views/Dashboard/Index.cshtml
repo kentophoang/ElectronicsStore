@@ -3,14 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="d-sm-flex align-items-center justify-content-between mb-4">
-    <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
-    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-        <i class="fas fa-download fa-sm text-white-50"></i> Tạo báo cáo
-    </a>
-</div>
 
-@* Hàng chứa các thẻ thống kê *@
+
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
@@ -68,28 +62,26 @@
 
 <hr class="my-4">
 
-@* Hàng chứa các lối vào chức năng quản lý chính *@
+
 <div class="row">
     <div class="col-lg-6 mb-4">
-        @* LIÊN KẾT ĐÚNG: Trỏ đến ProductsController *@
-        <a class="card bg-primary text-white shadow h-100 text-decoration-none"
-           asp-area="Admin" asp-controller="Products" asp-action="Index">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-box-open fa-3x mb-3"></i>
-                <h4 class="text-white">Quản lý Sản phẩm</h4>
-                <div class="text-white-50 small">Thêm, sửa, xóa các sản phẩm</div>
-            </div>
-        </a>
+            <a class="card bg-primary text-white shadow h-100 text-decoration-none"
+               asp-area="Admin" asp-controller="Products" asp-action="Index">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-box-open fa-3x mb-3"></i>
+                    <h4 class="text-white">Quản lý Sản phẩm</h4>
+                    <div class="text-white-50 small">Thêm, sửa, xóa các sản phẩm</div>
+                </div>
+            </a>
     </div>
     <div class="col-lg-6 mb-4">
-        @* LIÊN KẾT ĐÚNG: Trỏ đến UsersController *@
-        <a class="card bg-info text-white shadow h-100 text-decoration-none"
-           asp-area="Admin" asp-controller="Users" asp-action="Index">
-            <div class="card-body text-center py-5">
-                <i class="fas fa-user-friends fa-3x mb-3"></i>
-                <h4 class="text-white">Quản lý Khách hàng</h4>
-                <div class="text-white-50 small">Xem danh sách và thông tin khách hàng</div>
-            </div>
-        </a>
+            <a class="card bg-info text-white shadow h-100 text-decoration-none"
+               asp-area="Admin" asp-controller="Users" asp-action="Index">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-user-friends fa-3x mb-3"></i>
+                    <h4 class="text-white">Quản lý Khách hàng</h4>
+                    <div class="text-white-50 small">Xem danh sách và thông tin khách hàng</div>
+                </div>
+            </a>
     </div>
 </div>

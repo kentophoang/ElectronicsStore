@@ -2,35 +2,54 @@
 
 @{
     ViewData["Title"] = "Chỉnh sửa vai trò";
+    // Sửa 1: Áp dụng Layout chung
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1 class="mb-4">@ViewData["Title"] cho người dùng: <strong>@Model.UserName</strong></h1>
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Phân quyền cho người dùng: <strong>@Model.UserName</strong></p>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Chọn các vai trò được phép</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <form asp-action="EditRoles" method="post">
+                        <input type="hidden" asp-for="UserId" />
+                        <input type="hidden" asp-for="UserName" />
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <form asp-action="EditRoles">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <input type="hidden" asp-for="UserId" />
+                        <div class="form-group">
+                            @for (int i = 0; i < Model.AllRoles.Count; i++)
+                            {
+                                var role = Model.AllRoles[i];
+                                <div class="form-check mb-2">
+                                    <input type="checkbox"
+                                           name="UserRoles"
+                                           value="@role"
+                                           class="form-check-input"
+                                           id="role-@i"
+                                           @(Model.UserRoles.Contains(role) ? "checked" : "") />
+                                    <label class="form-check-label" for="role-@i">
+                                        @role
+                                    </label>
+                                </div>
+                            }
+                        </div>
 
-                    <div class="form-group">
-                        <h5>Chọn các vai trò:</h5>
-                        @foreach (var role in Model.AllRoles)
-                        {
-                            <div class="form-check m-2">
-                                <input type="checkbox" name="UserRoles" value="@role" class="form-check-input"
-                                       @(Model.UserRoles.Contains(role) ? "checked" : "") />
-                                <label class="form-check-label">@role</label>
-                            </div>
-                        }
-                    </div>
-                    <hr />
-                    <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
-                        <a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>
-                    </div>
-                </form>
+                        <hr />
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Cập nhật vai trò
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

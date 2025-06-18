@@ -114,7 +114,7 @@ namespace ElectronicsStore.Data
             {
                 entity.Property(e => e.CustomerName).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.ShippingAddress).IsRequired().HasMaxLength(250);
-                entity.Property(e => e.PhoneNumber).IsRequired(); // Assuming string, no specific max length from migration
+                entity.Property(e => e.PhoneNumber).IsRequired(); 
                 entity.Property(e => e.PaymentMethod).IsRequired();
             });
 

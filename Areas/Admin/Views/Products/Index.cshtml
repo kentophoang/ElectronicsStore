@@ -1,133 +1,62 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.Product>
 
 @{
-    ViewData["Title"] = "Quản lý Sản phẩm";
+    // FIX 1: Thêm dòng này để trang sử dụng layout chung (có header & footer)
+    ViewData["Title"] = "Danh sách sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="card shadow-sm mt-3">
-    <div class="card-header">
-        <div class="d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">
-                <i class="fas fa-box-open me-2"></i>@ViewData["Title"]
-            </h4>
-            <a class="btn btn-primary" asp-action="Create">
-                <i class="fas fa-plus"></i> Thêm sản phẩm mới
-            </a>
+<div class="container-fluid">
+
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Tại đây bạn có thể quản lý tất cả sản phẩm trong cửa hàng.</p>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Thêm sản phẩm mới
+        </a>
+    </p>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Dữ liệu sản phẩm</h6>
         </div>
-    </div>
-    <div class="card-body">
-
-        @* THÊM FORM TÌM KIẾM *@
-        <form asp-action="Index" method="get" class="mb-4">
-            <div class="input-group">
-                <input type="text" name="searchString" class="form-control" placeholder="Tìm kiếm theo tên sản phẩm..." value="@ViewData["CurrentFilter"]">
-                <button class="btn btn-outline-primary" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
-                <a asp-action="Index" class="btn btn-outline-secondary"><i class="fas fa-sync-alt"></i> Tải lại</a>
-            </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th> @* Sửa lỗi DisplayNameFor *@
-                        <th>Giá</th>
-                        <th>Danh mục</th>
-                        <th>Tồn kho</th>
-                        <th>Trạng thái</th>
-                        <th>Nổi bật</th>
-                        <th>Ngày tạo</th>
-                        <th style="width: 120px;">Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @* Thêm kiểm tra nếu không có sản phẩm nào *@
-                    @if (!Model.Any())
-                    {
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
                         <tr>
-                            <td colspan="9" class="text-center text-muted py-4">
-                                Không tìm thấy sản phẩm nào.
-                            </td>
+                            <th>Tên sản phẩm</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Loại</th>
+                            <th style="width: 150px;">Hành động</th>
                         </tr>
-                    }
-                    else
-                    {
+                    </thead>
+                    <tbody>
                         @foreach (var item in Model)
                         {
                             <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                                <td>@item.Price.ToString("N0") VNĐ</td>
+                                <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Category.Name)</td>
                                 <td>
-                                    @if (!string.IsNullOrEmpty(item.MainImageUrl))
-                                    {
-                                        <img src="@item.MainImageUrl" alt="@item.Name" style="width: 60px; height: 60px; object-fit: cover;" class="rounded border" />
-                                    }
-                                    else
-                                    {
-                                        <div class="text-center text-muted d-flex align-items-center justify-content-center" style="width: 60px; height: 60px; background-color: #f8f9fa;" title="Không có ảnh">
-                                            <i class="fas fa-image"></i>
-                                        </div>
-                                    }
-                                </td>
-                                <td>
-                                    <strong>@Html.DisplayFor(modelItem => item.Name)</strong>
-                                </td>
-                                <td class="text-danger fw-bold">
-                                    @item.Price.ToString("N0") đ
-                                </td>
-                                <td>@item.Category?.Name</td>
-                                <td>@item.StockQuantity</td>
-                                <td>
-                                    @if (item.IsActive)
-                                    {
-                                        <span class="text-success" title="Đang hiển thị"><i class="fas fa-check-circle"></i></span>
-                                    }
-                                    else
-                                    {
-                                        <span class="text-muted" title="Đang ẩn"><i class="fas fa-times-circle"></i></span>
-                                    }
-                                </td>
-                                <td>
-                                    @if (item.IsFeatured)
-                                    {
-                                        <span class="text-warning" title="Sản phẩm nổi bật"><i class="fas fa-star"></i></span>
-                                    }
-                                </td>
-                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
-                                <td>
+                                    @* FIX 2: Thêm các nút Sửa và Xóa vào cột Hành động *@
                                     <div class="btn-group" role="group">
-                                        <a class="btn btn-outline-primary btn-sm" asp-action="Edit" asp-route-id="@item.Id" title="Sửa"><i class="fas fa-edit"></i></a>
-                                        <a class="btn btn-outline-info btn-sm" asp-action="Details" asp-route-id="@item.Id" title="Chi tiết"><i class="fas fa-info-circle"></i></a>
-                                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.Id" title="Xóa"><i class="fas fa-trash-alt"></i></a>
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
                         }
-                    }
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
-    @* THÊM LẠI PHẦN PHÂN TRANG *@
-    @if (ViewBag.TotalPages > 1)
-    {
-        <div class="card-footer">
-            <nav aria-label="Product navigation">
-                <ul class="pagination justify-content-center mb-0">
-                    <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage - 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Trước</a>
-                    </li>
-                    @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                    {
-                        <li class="page-item @(ViewBag.CurrentPage == i ? "active" : "")">
-                            <a class="page-link" asp-action="Index" asp-route-page="@i" asp-route-searchString="@ViewData["CurrentFilter"]">@i</a>
-                        </li>
-                    }
-                    <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
-                        <a class="page-link" asp-action="Index" asp-route-page="@(ViewBag.CurrentPage + 1)" asp-route-searchString="@ViewData["CurrentFilter"]">Sau</a>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    }
 </div>

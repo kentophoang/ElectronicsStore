@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 using System.Collections.Generic;
+using ElectronicsStore.ViewModels; // <-- THÊM DÒNG NÀY ĐỂ SỬ DỤNG CreateUserViewModel
 
 namespace ElectronicsStore.Areas.Admin.Controllers
 {
@@ -23,7 +24,7 @@ namespace ElectronicsStore.Areas.Admin.Controllers
             _roleManager = roleManager;
         }
 
-        // <<< NÂNG CẤP ACTION INDEX VỚI TÌM KIẾM VÀ PHÂN TRANG >>>
+        // Action Index với tìm kiếm và phân trang
         public async Task<IActionResult> Index(string searchString, int page = 1)
         {
             int pageSize = 10;
@@ -46,16 +47,45 @@ namespace ElectronicsStore.Areas.Admin.Controllers
             return View(users);
         }
 
-        // Action này đã ổn, nhưng chúng ta sẽ tập trung vào EditRoles
-        public async Task<IActionResult> Details(string id)
+        // << THÊM MỚI: CÁC ACTION ĐỂ TẠO NGƯỜI DÙNG >>
+        // GET: Admin/Users/Create
+        public IActionResult Create()
         {
-            if (id == null) return NotFound();
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null) return NotFound();
-
-            ViewBag.Roles = await _userManager.GetRolesAsync(user);
-            return View(user);
+            return View();
         }
+
+        // POST: Admin/Users/Create
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreateUserViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email,
+                    FullName = model.FullName,
+                    PhoneNumber = model.PhoneNumber,
+                    EmailConfirmed = true // Tự động xác thực email khi admin tạo
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+                if (result.Succeeded)
+                {
+                    // Mặc định gán vai trò "User"
+                    await _userManager.AddToRoleAsync(user, "User");
+                    return RedirectToAction(nameof(Index));
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+            // Nếu có lỗi, trả lại form với dữ liệu đã nhập
+            return View(model);
+        }
+
 
         // GET: Admin/Users/EditRoles/USER_ID
         public async Task<IActionResult> EditRoles(string id)
@@ -93,7 +123,7 @@ namespace ElectronicsStore.Areas.Admin.Controllers
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Không thể xóa các vai trò hiện tại của người dùng.");
-                return View(model); // Trở lại view với lỗi
+                return View(model);
             }
 
             if (model.UserRoles != null && model.UserRoles.Any())
@@ -102,7 +132,7 @@ namespace ElectronicsStore.Areas.Admin.Controllers
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", "Không thể thêm các vai trò đã chọn cho người dùng.");
-                    return View(model); // Trở lại view với lỗi
+                    return View(model);
                 }
             }
 
@@ -130,24 +160,22 @@ namespace ElectronicsStore.Areas.Admin.Controllers
             var user = await _userManager.FindByIdAsync(id);
             if (user == null) return NotFound("Không tìm thấy người dùng.");
 
-            // <<< THÊM BẢO MẬT: Không cho admin tự xóa chính mình >>>
+            // Bảo mật: Không cho admin tự xóa chính mình
             var currentUserId = _userManager.GetUserId(User);
             if (id == currentUserId)
             {
                 ModelState.AddModelError(string.Empty, "Bạn không thể xóa chính tài khoản của mình.");
-                return View("Delete", user); // Trở lại trang Delete với thông báo lỗi
+                return View("Delete", user);
             }
 
             var result = await _userManager.DeleteAsync(user);
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Không thể xóa người dùng. Có thể người dùng này đã có đơn hàng hoặc dữ liệu liên quan.");
-                return View("Delete", user); // Trở lại trang Delete với thông báo lỗi
+                return View("Delete", user);
             }
 
             return RedirectToAction(nameof(Index));
         }
-
-        // <<< DỌN DẸP: Xóa Action Manage() không cần thiết >>>
     }
 }
