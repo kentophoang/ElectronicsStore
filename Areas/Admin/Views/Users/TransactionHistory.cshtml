@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.Order>
 
 @{
-    ViewData["Title"] = "Lịch sử Mua hàng";
+    ViewData["Title"] = "Lịch sử Giao dịch của " + ViewBag.UserName;
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -14,7 +15,7 @@
                 <th>Mã Đơn hàng</th>
                 <th>Ngày Đặt</th>
                 <th>Tổng Tiền</th>
-                <th>Chi tiết</th>
+                <th>Chi tiết Sản phẩm</th>
             </tr>
         </thead>
         <tbody>
@@ -25,11 +26,11 @@
                     <td>@order.OrderDate.ToString("g")</td>
                     <td>@order.TotalAmount.ToString("C")</td>
                     <td>
-                        <ul>
+                        <ul class="list-unstyled">
                             @foreach (var item in order.OrderItems)
                             {
                                 <li>
-                                    @item.Product.Name - Số lượng: @item.Quantity - Giá: @item.Price.ToString("C")
+                                    @item.Product.Name (SL: @item.Quantity, Giá: @item.Price.ToString("C"))
                                 </li>
                             }
                         </ul>
@@ -41,5 +42,6 @@
 }
 else
 {
-    <p>Bạn chưa có đơn hàng nào.</p>
+    <p>Người dùng này chưa có giao dịch nào.</p>
 }
+<a asp-action="Index" class="btn btn-secondary">Quay lại danh sách</a>

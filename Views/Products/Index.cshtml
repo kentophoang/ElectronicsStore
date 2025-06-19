@@ -1,0 +1,91 @@
+﻿@model ElectronicsStore.ViewModels.ProductListViewModel
+
+@{
+    ViewData["Title"] = Model.CurrentCategoryName ?? "Tất cả sản phẩm";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    @* THANH ĐIỀU HƯỚNG DANH MỤC BÊN TRÁI (Bố cục của bạn) *@
+    <div class="col-md-3">
+        <div class="card mb-4 category-menu">
+            <div class="card-header bg-primary text-white">
+                <h5><i class="fas fa-list"></i> Danh mục sản phẩm</h5>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item @(Model.CurrentCategoryId == null ? "active" : "")">
+                    @* Sửa lại link này để nó xóa bộ lọc danh mục *@
+                    <a asp-action="Index" asp-route-searchString="@Model.SearchString" asp-route-categorySlug="" class="text-decoration-none d-block">Tất cả sản phẩm</a>
+                </li>
+                @foreach (var category in Model.Categories.Where(c => c.ParentId == null))
+                {
+                    <li class="list-group-item fw-bold @(Model.CurrentCategoryId == category.Id ? "active" : "")">
+                        @* Sửa lại link này để dùng slug *@
+                        <a asp-action="Index" asp-route-categorySlug="@category.Slug" asp-route-searchString="@Model.SearchString" class="text-decoration-none d-block">
+                            @category.Name
+                        </a>
+                    </li>
+
+                    @* Hiển thị các danh mục con / nhãn hàng *@
+                    @foreach (var subCategory in Model.Categories.Where(c => c.ParentId == category.Id))
+                    {
+                        <li class="list-group-item ps-4 @(Model.CurrentCategoryId == subCategory.Id ? "active" : "")">
+                            <a asp-action="Index" asp-route-categorySlug="@subCategory.Slug" asp-route-searchString="@Model.SearchString" class="text-decoration-none d-block">
+                                @subCategory.Name
+                            </a>
+                        </li>
+                    }
+                }
+            </ul>
+        </div>
+    </div>
+
+    @* KHU VỰC HIỂN THỊ SẢN PHẨM BÊN PHẢI *@
+    <div class="col-md-9">
+        <h3 class="mb-4">@ViewData["Title"]</h3>
+
+        @if (!Model.Products.Any())
+        {
+            <div class="alert alert-warning" role="alert">
+                Không tìm thấy sản phẩm nào phù hợp.
+            </div>
+        }
+        else
+        {
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                @foreach (var product in Model.Products)
+                {
+                    <div class="col">
+                        <partial name="_ProductCardPartial" model="product" />
+                    </div>
+                }
+            </div>
+
+            @* PHÂN TRANG ĐÃ ĐƯỢC SỬA LẠI ĐỂ HOẠT ĐỘNG CHÍNH XÁC *@
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @if (Model.PageNumber > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-all-route-data="Model.RouteData" asp-route-pageNumber="@(Model.PageNumber - 1)">Trước</a>
+                        </li>
+                    }
+
+                    @for (int i = 1; i <= Model.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.PageNumber ? "active" : "")">
+                            <a class="page-link" asp-action="Index" asp-all-route-data="Model.RouteData" asp-route-pageNumber="@i">@i</a>
+                        </li>
+                    }
+
+                    @if (Model.PageNumber < Model.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" asp-action="Index" asp-all-route-data="Model.RouteData" asp-route-pageNumber="@(Model.PageNumber + 1)">Sau</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+</div>

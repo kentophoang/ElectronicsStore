@@ -1,6 +1,25 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.Category>
 
-@foreach (var category in Model)
+@foreach (var parentCategory in Model)
 {
-    <li><a class="dropdown-item" asp-controller="Product" asp-action="Index" asp-route-categoryId="@category.Id">@category.Name</a></li>
+    @if (parentCategory.SubCategories.Any())
+    {
+        <li class="dropdown-submenu">
+            <a class="dropdown-item dropdown-toggle" href="#">@parentCategory.Name</a>
+            <ul class="dropdown-menu">
+                @foreach (var subCategory in parentCategory.SubCategories)
+                {
+                    <li>
+                        <a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categorySlug="@subCategory.Slug">@subCategory.Name</a>
+                    </li>
+                }
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li>
+            <a class="dropdown-item" asp-controller="Products" asp-action="Index" asp-route-categorySlug="@parentCategory.Slug">@parentCategory.Name</a>
+        </li>
+    }
 }

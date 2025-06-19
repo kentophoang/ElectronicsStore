@@ -50,3 +50,29 @@ body {
 .navbar-nav .nav-link.active {
     font-weight: bold;
 }
+/* CSS cho menu đa cấp */
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu .dropdown-menu {
+        top: 0;
+        left: 100%;
+        margin-top: -1px;
+        display: none; /* Ẩn menu con mặc định */
+ }
+
+    /* Hiển thị menu con khi hover vào mục cha */
+    .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+    }
+
+    /* Tạo mũi tên cho các mục có menu con */
+    .dropdown-submenu > .dropdown-item.dropdown-toggle::after {
+        border-top: .3em solid transparent;
+        border-right: 0;
+        border-bottom: .3em solid transparent;
+        border-left: .3em solid;
+        vertical-align: middle;
+        margin-left: .255em;
+    }

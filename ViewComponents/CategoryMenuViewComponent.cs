@@ -1,25 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ElectronicsStore.Data;
+﻿using ElectronicsStore.Data;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
-// Ensure your models' namespace is included, e.g., using ElectronicsStore.Models;
-using ElectronicsStore.Models; // Adjust according to your project structure
 
-public class CategoryMenuViewComponent : ViewComponent
+namespace ElectronicsStore.ViewComponents
 {
-    private readonly ApplicationDbContext _context;
-
-    public CategoryMenuViewComponent(ApplicationDbContext context)
+    public class CategoryMenuViewComponent : ViewComponent
     {
-        _context = context;
-    }
+        private readonly ApplicationDbContext _context;
 
-    public async Task<IViewComponentResult> InvokeAsync()
-    {
-        var categories = await _context.Categories.OrderBy(c => c.Name).ToListAsync();
-        return View(categories);
+        public CategoryMenuViewComponent(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            // Lấy các danh mục cấp 1 và các danh mục con của chúng
+            var categories = await _context.Categories
+                                     .Where(c => c.ParentId == null)
+                                     .Include(c => c.SubCategories)
+                                     .OrderBy(c => c.Name)
+                                     .ToListAsync();
+            return View(categories);
+        }
     }
 }
-

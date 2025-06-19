@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public class Product
     {
@@ -32,8 +33,11 @@
         [Range(0, int.MaxValue, ErrorMessage = "Số lượng tồn kho không hợp lệ")]
         public int StockQuantity { get; set; }
 
-        public int? CategoryId { get; set; }
-        public Category? Category { get; set; }
+        [Display(Name = "Danh mục")]
+        public int CategoryId { get; set; } // << Quan trọng: Phải là 'int', không phải 'int?'
+
+        [ForeignKey("CategoryId")]
+        public virtual Category Category { get; set; }
 
         [StringLength(500)]
         public required string MainImageUrl { get; set; }

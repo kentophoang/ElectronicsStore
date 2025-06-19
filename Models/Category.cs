@@ -1,26 +1,36 @@
-﻿namespace ElectronicsStore.Models
-{
-    using System.ComponentModel.DataAnnotations;
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
+namespace ElectronicsStore.Models
+{
     public class Category
     {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Tên danh mục là bắt buộc")]
-        [StringLength(100, ErrorMessage = "Tên danh mục không được vượt quá 100 ký tự")]
-        public required string Name { get; set; } // <<< Thêm 'required' >>>
+        [StringLength(100)]
+        [Display(Name = "Tên Danh mục")]
+        public required string Name { get; set; }
 
-        [StringLength(500, ErrorMessage = "Mô tả danh mục không được vượt quá 500 ký tự")]
-        public string? Description { get; set; } // <<< Đánh dấu là nullable (có thể null) >>>
+        [StringLength(500)]
+        [Display(Name = "Mô tả")]
+        public string? Description { get; set; }
 
-        [StringLength(250, ErrorMessage = "Slug không được vượt quá 250 ký ký tự")]
-        public required string Slug { get; set; } // <<< Thêm 'required' >>>
+        [StringLength(250)]
+        public string? Slug { get; set; }
 
-        [StringLength(500, ErrorMessage = "URL ảnh danh mục không được vượt quá 500 ký tự")]
-        public string? ImageUrl { get; set; } // <<< Đánh dấu là nullable (có thể null) >>>
+        [StringLength(500)]
+        [Display(Name = "URL Hình ảnh")]
+        public string? ImageUrl { get; set; }
 
-        public ICollection<Product> Products { get; set; } = new List<Product>(); // <<< Khởi tạo tập hợp rỗng >>>
+        [Display(Name = "Danh mục cha")]
+        public int? ParentId { get; set; }
+
+        [ForeignKey("ParentId")]
+        public virtual Category? Parent { get; set; }
+
+        public virtual ICollection<Category> SubCategories { get; set; } = new List<Category>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
     }
-
 }

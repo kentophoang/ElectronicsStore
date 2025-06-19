@@ -27,22 +27,20 @@ namespace ElectronicsStore.Controllers
             _httpContextAccessor = httpContextAccessor;
         }
 
-        // Action này đã tốt, không cần sửa
         public async Task<IActionResult> History()
         {
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
             var orders = await _context.Orders
-                                       .Where(o => o.UserId == user.Id)
-                                       .Include(o => o.OrderItems)
-                                           .ThenInclude(oi => oi.Product)
-                                       .OrderByDescending(o => o.OrderDate)
-                                       .ToListAsync();
+                                        .Where(o => o.UserId == user.Id)
+                                        .Include(o => o.OrderItems)
+                                            .ThenInclude(oi => oi.Product)
+                                        .OrderByDescending(o => o.OrderDate)
+                                        .ToListAsync();
             return View(orders);
         }
 
-        // Action này đã tốt và an toàn, không cần sửa
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null) return NotFound();
@@ -53,7 +51,7 @@ namespace ElectronicsStore.Controllers
             var order = await _context.Orders
                                       .Include(o => o.OrderItems)
                                           .ThenInclude(oi => oi.Product)
-                                      .FirstOrDefaultAsync(m => m.Id == id && m.UserId == user.Id); // Rất tốt, có kiểm tra user.Id
+                                      .FirstOrDefaultAsync(m => m.Id == id && m.UserId == user.Id);
 
             if (order == null) return NotFound();
 
@@ -67,7 +65,6 @@ namespace ElectronicsStore.Controllers
             var session = _httpContextAccessor.HttpContext?.Session;
             var cartJson = session?.GetString("Cart");
 
-            // <<< CẢI TIẾN 1: Xử lý giỏ hàng an toàn hơn >>>
             List<CartItem> cart = (cartJson != null)
                 ? JsonConvert.DeserializeObject<List<CartItem>>(cartJson) ?? new List<CartItem>()
                 : new List<CartItem>();
@@ -81,12 +78,9 @@ namespace ElectronicsStore.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                // <<< CẢI TIẾN 2: Sửa lại đường dẫn Redirect đến trang Login cho đúng >>>
-                // Thay vì dùng RedirectToAction, dùng RedirectToPage với Area của Identity
                 return RedirectToPage("/Account/Login", new { area = "Identity", returnUrl = Url.Action("Checkout", "Cart") });
             }
 
-            // Dùng lại logic này nếu ModelState không hợp lệ
             if (!ModelState.IsValid)
             {
                 var checkoutVm = new CheckoutPageViewModel
@@ -107,7 +101,6 @@ namespace ElectronicsStore.Controllers
             var productIdsInCart = cart.Select(c => c.ProductId).ToList();
             var productsInDb = await _context.Products.Where(p => productIdsInCart.Contains(p.Id)).ToListAsync();
 
-            // <<< CẢI TIẾN 3: Kiểm tra hàng tồn và tính giá ở Server >>>
             foreach (var item in cart)
             {
                 var productInDb = productsInDb.FirstOrDefault(p => p.Id == item.ProductId);
@@ -123,17 +116,15 @@ namespace ElectronicsStore.Controllers
                     return RedirectToAction("Index", "Cart");
                 }
 
-                // Trừ số lượng tồn kho
                 productInDb.StockQuantity -= item.Quantity;
 
-                // Tính tổng tiền dựa trên giá từ database
                 totalAmountFromServer += productInDb.Price * item.Quantity;
 
                 orderItems.Add(new OrderItem
                 {
                     ProductId = item.ProductId,
                     Quantity = item.Quantity,
-                    Price = productInDb.Price // Lấy giá từ database, không tin tưởng giá từ session
+                    Price = productInDb.Price
                 });
             }
 
@@ -145,7 +136,7 @@ namespace ElectronicsStore.Controllers
                 CustomerName = model.CustomerName,
                 PhoneNumber = model.PhoneNumber,
                 Email = model.Email ?? user.Email,
-                TotalAmount = totalAmountFromServer, // <<< Sử dụng tổng tiền đã tính lại
+                TotalAmount = totalAmountFromServer,
                 Status = OrderStatus.Pending,
                 PaymentMethod = model.PaymentMethod,
                 IsPaid = (model.PaymentMethod != "COD"),
@@ -165,7 +156,6 @@ namespace ElectronicsStore.Controllers
             var user = await _userManager.GetUserAsync(User);
             if (user == null) return NotFound();
 
-            // <<< CẢI TIẾN 4: THÊM BẢO MẬT - Đảm bảo người dùng chỉ xem được đơn hàng của chính mình >>>
             var order = await _context.Orders
                                       .Include(o => o.OrderItems)
                                           .ThenInclude(oi => oi.Product)
@@ -173,7 +163,6 @@ namespace ElectronicsStore.Controllers
 
             if (order == null)
             {
-                // Không tìm thấy đơn hàng hoặc đơn hàng không thuộc về người dùng này
                 return NotFound();
             }
             return View(order);

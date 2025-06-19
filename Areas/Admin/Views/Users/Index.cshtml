@@ -1,7 +1,6 @@
 ﻿@model IEnumerable<ElectronicsStore.Models.ApplicationUser>
 
 @{
-    // FIX 1: Thêm dòng này để áp dụng layout chung (header, footer, sidebar...)
     ViewData["Title"] = "Quản lý Khách hàng";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -15,15 +14,13 @@
         <div class="card-header py-3">
             <div class="d-flex justify-content-between align-items-center">
                 <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
-              
-                <a class="btn btn-primary" asp-action="Create" title="Chức năng đang phát triển">
+                <a class="btn btn-primary disabled" asp-action="Create" title="Chức năng đang phát triển">
                     <i class="fas fa-user-plus"></i> Thêm người dùng
                 </a>
             </div>
         </div>
         <div class="card-body">
 
-            
             <form asp-action="Index" method="get" class="mb-4">
                 <div class="input-group">
                     <input type="text" name="searchString" class="form-control" placeholder="Tìm theo tên, email..." value="@ViewData["CurrentFilter"]">
@@ -39,7 +36,7 @@
                             <th>Họ và tên</th>
                             <th>Email / Tên đăng nhập</th>
                             <th>Số điện thoại</th>
-                            <th class="text-center" style="width: 180px;">Hành động</th>
+                            <th class="text-center" style="width: 240px;">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,10 +57,13 @@
                                     <td>@user.Email</td>
                                     <td>@(user.PhoneNumber ?? "Chưa có")</td>
                                     <td class="text-center">
-                                        @* FIX 2: Cải thiện các nút hành động, thêm text cho rõ ràng *@
                                         <div class="btn-group" role="group">
+                                            @* NÚT XEM LỊCH SỬ ĐÃ ĐƯỢC THÊM VÀO ĐÂY *@
+                                            <a asp-action="TransactionHistory" asp-route-id="@user.Id" class="btn btn-info btn-sm" title="Xem lịch sử giao dịch">
+                                                <i class="fas fa-history"></i> Lịch sử
+                                            </a>
                                             <a asp-action="EditRoles" asp-route-id="@user.Id" class="btn btn-primary btn-sm" title="Sửa vai trò">
-                                                <i class="fas fa-user-edit"></i> Sửa vai trò
+                                                <i class="fas fa-user-edit"></i> Vai trò
                                             </a>
                                             <a asp-action="Delete" asp-route-id="@user.Id" class="btn btn-danger btn-sm" title="Xóa người dùng">
                                                 <i class="fas fa-user-times"></i> Xóa
@@ -78,7 +78,6 @@
             </div>
         </div>
 
-        
         @if (ViewBag.TotalPages > 1)
         {
             <div class="card-footer">

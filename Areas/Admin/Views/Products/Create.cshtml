@@ -88,7 +88,7 @@
                         </div>
                         <div class="form-group mb-3">
                             <label class="control-label fw-bold">Ảnh đại diện</label>
-                            <input type="file" name="ImageFile" class="form-control" />
+                            <input type="file" name="imageFile" class="form-control" accept="image/*" />
                         </div>
                         <hr />
                         <div class="form-group form-check form-switch">
@@ -103,13 +103,6 @@
                 </div>
             </div>
         </div>
-
-        @*
-            LƯU Ý QUAN TRỌNG:
-            - Các trường 'Slug', 'CreatedDate', 'UpdatedDate' đã được gỡ khỏi form vì chúng nên được xử lý tự động.
-            - 'Slug' nên được tự động tạo từ 'Name' trong Controller để tối ưu SEO.
-            - 'CreatedDate' và 'UpdatedDate' nên được gán giá trị DateTime.Now ở phía server khi tạo/cập nhật sản phẩm.
-        *@
     </form>
 </div>
 

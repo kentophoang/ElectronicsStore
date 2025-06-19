@@ -7,22 +7,27 @@
 
     @if (SignInManager.IsSignedIn(User))
     {
-        @* Tối ưu: Lấy thông tin người dùng một lần bằng await *@
         var currentUser = await UserManager.GetUserAsync(User);
 
         @* Nút Quản lý chỉ hiển thị khi là Admin *@
         @if (User.IsInRole("Admin"))
         {
             <li class="nav-item me-2">
-                @* SỬA LẠI ĐÂY: asp-controller trỏ đến "Dashboard" *@
                 <a class="nav-link text-white btn btn-warning btn-sm" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                     <i class="fas fa-cogs"></i> Quản lý
                 </a>
             </li>
         }
 
+        @* Thêm link Lịch sử Giao dịch *@
+        <li class="nav-item me-2">
+            <a class="nav-link text-white" asp-controller="Order" asp-action="History" title="Lịch sử giao dịch">
+                <i class="fas fa-history"></i> Lịch sử
+            </a>
+        </li>
+
         <li class="nav-item me-3">
-            <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">
+            <a id="manage" class="nav-link text-white" asp-area="Identity" asp-page="/Account/Manage/Index" title="Quản lý tài khoản">
                 <i class="fas fa-user-circle"></i> @(currentUser?.FullName ?? currentUser?.UserName)
             </a>
         </li>

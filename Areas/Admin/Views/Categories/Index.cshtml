@@ -1,0 +1,90 @@
+﻿@model IEnumerable<ElectronicsStore.Models.Category>
+
+@{
+    ViewData["Title"] = "Quản lý Danh mục";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h1 class="h3 mb-2 text-gray-800">@ViewData["Title"]</h1>
+    <p class="mb-4">Tạo, sửa, xóa và quản lý các danh mục sản phẩm và nhãn hàng của cửa hàng.</p>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <h6 class="m-0 font-weight-bold text-primary">Danh sách Danh mục & Nhãn hàng</h6>
+                <a class="btn btn-primary" asp-action="Create">
+                    <i class="fas fa-plus"></i> Tạo mới
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="categoriesTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Tên Danh mục / Nhãn hàng</th>
+                            <th>Danh mục cha</th>
+                            <th>Mô tả</th>
+                            <th class="text-center" style="width: 150px;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @* Hiển thị hình ảnh nếu có *@
+                                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                    {
+                                        <img src="@item.ImageUrl" alt="@item.Name" style="width: 40px; height: 40px; object-fit: cover; border-radius: 5px; margin-right: 10px;"
+                                             onerror="this.style.display='none'" />
+                                    }
+                                    <strong>@item.Name</strong>
+                                </td>
+                                <td>
+                                    @* Hiển thị tên danh mục cha nếu có *@
+                                    <span class="badge bg-secondary">@item.Parent?.Name</span>
+                                </td>
+                                <td>@item.Description</td>
+                                <td class="text-center">
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm" title="Sửa">
+                                            <i class="fas fa-edit"></i> Sửa
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm" title="Xóa">
+                                            <i class="fas fa-trash"></i> Xóa
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#categoriesTable').DataTable({
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.11.5/i18n/vi.json"
+                },
+                // Sắp xếp mặc định theo cột "Danh mục cha" để nhóm các mục con lại với nhau
+                "order": [[ 1, "asc" ]]
+            });
+        });
+    </script>
+}

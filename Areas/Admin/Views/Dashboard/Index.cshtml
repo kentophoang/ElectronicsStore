@@ -3,7 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-
+<div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">@ViewData["Title"]</h1>
+</div>
 
 <div class="row">
     <div class="col-xl-3 col-md-6 mb-4">
@@ -62,26 +64,45 @@
 
 <hr class="my-4">
 
-
 <div class="row">
     <div class="col-lg-6 mb-4">
-            <a class="card bg-primary text-white shadow h-100 text-decoration-none"
-               asp-area="Admin" asp-controller="Products" asp-action="Index">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-box-open fa-3x mb-3"></i>
-                    <h4 class="text-white">Quản lý Sản phẩm</h4>
-                    <div class="text-white-50 small">Thêm, sửa, xóa các sản phẩm</div>
-                </div>
-            </a>
+        <a class="card bg-primary text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Products" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-box-open fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Sản phẩm</h4>
+                <div class="text-white-50 small">Thêm, sửa, xóa các sản phẩm</div>
+            </div>
+        </a>
     </div>
     <div class="col-lg-6 mb-4">
-            <a class="card bg-info text-white shadow h-100 text-decoration-none"
-               asp-area="Admin" asp-controller="Users" asp-action="Index">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-user-friends fa-3x mb-3"></i>
-                    <h4 class="text-white">Quản lý Khách hàng</h4>
-                    <div class="text-white-50 small">Xem danh sách và thông tin khách hàng</div>
-                </div>
-            </a>
+        <a class="card bg-success text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Categories" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-sitemap fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Danh mục</h4>
+                <div class="text-white-50 small">Thêm, sửa, xóa các loại sản phẩm</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <a class="card bg-warning text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Orders" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-history fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Đơn hàng</h4>
+                <div class="text-white-50 small">Xem lịch sử và cập nhật trạng thái</div>
+            </div>
+        </a>
+    </div>
+    <div class="col-lg-6 mb-4">
+        <a class="card bg-info text-white shadow h-100 text-decoration-none"
+           asp-area="Admin" asp-controller="Users" asp-action="Index">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-user-friends fa-3x mb-3"></i>
+                <h4 class="text-white">Quản lý Khách hàng</h4>
+                <div class="text-white-50 small">Xem danh sách và thông tin khách hàng</div>
+            </div>
+        </a>
     </div>
 </div>
